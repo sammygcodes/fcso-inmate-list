@@ -1,0 +1,13 @@
+{
+  "name": "fcso-inmate-list",
+  "version": "1.0.0",
+  "description": "Retrieves FCSO Inmates",
+  "main": "inmate.js",
+  "scripts": {
+    "start": "node inmate.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sam",
+  "license": "ISC",
+  "type": "module"
+}
