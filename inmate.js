@@ -6,15 +6,40 @@ const cookieValue = '.AspNetCore.Antiforgery.9fXoN5jHCXs=CfDJ8Ce9VDaDKHpIptOWN3y
 
 let XSFR;
 
-let value = 10;
-let skipValue = 0;
+let totalInmates = -1;
+let maxBond = -1;
 
-let partialInmateList = [];
+const TAKE_VALUE = 10;
+let skipValue = 0;
 let inmateList = [];
+let filteredList = [];
 
 await getAdsData();
-partialInmateList = await getInmateData(value, skipValue, true);
-processData(partialInmateList);
+
+// retrieve all inmates (API only retrieves 10 at a time on browser)
+do {
+    let partialInmateList = await getInmateData(TAKE_VALUE, skipValue, skipValue === 0);
+    addInmates(partialInmateList);
+    skipValue += 10;
+} while (skipValue < 30);
+
+processList(5000);
+
+function addInmates(partialInmateList) {
+    partialInmateList.forEach((inmate) => {
+        inmateList.push(inmate);
+    });
+    console.log(inmateList.length + ' inmates in list');
+}
+
+function processList(bondAmount) {
+    inmateList.forEach((inmate) => {
+        if(inmate.TotalBondAmount <= bondAmount && inmate.TotalBondAmount > 0) {
+            filteredList.push(inmate);
+        }
+    });
+    console.log('filtered size: ' + filteredList.length);
+}
 
 async function getAdsData() {
     //load ads settings to get XSFR Token
@@ -75,7 +100,7 @@ async function getInmateData(start, skip, includeCount) {
                 "Referer": "https://forsythsheriffnc.policetocitizen.com/Inmates/Catalog",
                 "Referrer-Policy": "strict-origin-when-cross-origin"
             },
-            "body": `{\"FilterOptionsParameters\":{\"IntersectionSearch\":true,\"SearchText\":\"\",\"Parameters\":[]},\"IncludeCount\":true,\"PagingOptions\":{\"SortOptions\":[{\"Name\":\"ArrestDate\",\"SortDirection\":\"Descending\",\"Sequence\":1}],\"Take\":${value},\"Skip\":${skipValue}}}`,
+            "body": `{\"FilterOptionsParameters\":{\"IntersectionSearch\":true,\"SearchText\":\"\",\"Parameters\":[]},\"IncludeCount\":${includeCount},\"PagingOptions\":{\"SortOptions\":[{\"Name\":\"ArrestDate\",\"SortDirection\":\"Descending\",\"Sequence\":1}],\"Take\":${TAKE_VALUE},\"Skip\":${skipValue}}}`,
             "method": "POST"
             });
             
@@ -84,14 +109,13 @@ async function getInmateData(start, skip, includeCount) {
             }
         
         const json = await response.json();
-        console.log(json.Inmates.length);
-        console.log(json.Total);
+        //console.log(json.Inmates.length);
+        if(includeCount) {
+            totalInmates = json.Total;
+        }
+        // console.log('total: ' + json.Total);
         return json.Inmates;
     } catch (error) {
         console.error(error.message);
     }
-}
-
-function processData(partialInmateList) {
-    console.log(partialInmateList[0]);
 }
