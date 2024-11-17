@@ -1,26 +1,40 @@
-//regular expression to filter out XSFR Token
+// import * as readline from 'node:readline';
+// import { stdin as input, stdout as output } from 'node:process';
+
+// const rl = readline.createInterface({ input, output });
+
+// rl.question('What is your name? ', (name) => {
+//   console.log(`Hello, ${name}!`);
+//   rl.close();
+// });
+
+// regular expression to filter out XSFR Token
 const XSFR_REGEX = /(?<=\=)(.*?)(?=\;)/;
 
-//this looks to be constant... praying it stays that way
+// this looks to be constant... praying it stays that way
 const cookieValue = '.AspNetCore.Antiforgery.9fXoN5jHCXs=CfDJ8Ce9VDaDKHpIptOWN3yolAThzCBrYRqo9xrMZSfLv9CCmAixLynEStAIOIinalmNRW5JfmFAu0Q5JwxiV3uBEwaMiaQ6Oqux3aS1KOf5WhkUrlMxPQB5FHLgvsr4av-3KexgruwTOCgjrQBsKUFqsio';
 
+// value needed for API call to work
 let XSFR;
 
 let totalInmates = -1;
 let maxBond = -1;
 
+// amount of inmates to retrieve per API call
 const TAKE_VALUE = 10;
 let skipValue = 0;
+
 let inmateList = [];
 let filteredList = [];
 
+// get XSFR value from Ads Settings Call
 await getAdsData();
 
 // retrieve all inmates (API only retrieves 10 at a time on browser)
 do {
     let partialInmateList = await getInmateData(TAKE_VALUE, skipValue, skipValue === 0);
     addInmates(partialInmateList);
-    skipValue += 10;
+    skipValue += TAKE_VALUE;
 } while (skipValue < 30);
 
 processList(5000);
@@ -42,7 +56,6 @@ function processList(bondAmount) {
 }
 
 async function getAdsData() {
-    //load ads settings to get XSFR Token
     try {
         const response = await fetch("https://forsythsheriffnc.policetocitizen.com/api/AdsSettings/Version/359", {
             "headers": {
@@ -79,7 +92,6 @@ async function getAdsData() {
 }
 
 async function getInmateData(start, skip, includeCount) {
-    //Get inmate list
     try {
         const response = await fetch("https://forsythsheriffnc.policetocitizen.com/api/Inmates/359", {
             "headers": {
