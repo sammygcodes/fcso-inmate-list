@@ -55,7 +55,6 @@ function addInmates(partialInmateList) {
     partialInmateList.forEach((inmate) => {
         inmateList.push(inmate);
     });
-    //console.log(inmateList.length + ' inmates in list');
     console.log(`${inmateList.length}/${totalInmates} inmates retrieved`)
 }
 
@@ -96,9 +95,9 @@ async function getAdsData() {
             "accept-language": "en-US,en;q=0.9",
             //"request-context": "appId=cid-v1:946a5921-f1df-4f45-bfa2-8dd3199a7d80",
             //"request-id": "|63055eccc64c47ff8a5f706b9ed60145.d26f7bfa3c3e4ebf",
-            "sec-ch-ua": "\"Chromium\";v=\"130\", \"Google Chrome\";v=\"130\", \"Not?A_Brand\";v=\"99\"",
-            "sec-ch-ua-mobile": "?0",
-            "sec-ch-ua-platform": "\"macOS\"",
+            // "sec-ch-ua": "\"Chromium\";v=\"130\", \"Google Chrome\";v=\"130\", \"Not?A_Brand\";v=\"99\"",
+            // "sec-ch-ua-mobile": "?0",
+            // "sec-ch-ua-platform": "\"macOS\"",
             "sec-fetch-dest": "empty",
             "sec-fetch-mode": "cors",
             "sec-fetch-site": "same-origin",
@@ -118,7 +117,6 @@ async function getAdsData() {
         const cookies = response.headers.getSetCookie();
         const XSFRCookie = cookies.find((cookie) => cookie.includes('XSRF-TOKEN'));
         XSFR = XSFR_REGEX.exec(XSFRCookie)[1];
-        //console.log(cookies);
     } catch (error) {
         console.error(error.message);
     }
@@ -133,9 +131,9 @@ async function getInmateData(start, skip, includeCount) {
                 "content-type": "application/json",
                 //"request-context": "appId=cid-v1:946a5921-f1df-4f45-bfa2-8dd3199a7d80",
                 //"request-id": "|63055eccc64c47ff8a5f706b9ed60145.a487134d0c8b4bde",
-                "sec-ch-ua": "\"Chromium\";v=\"130\", \"Google Chrome\";v=\"130\", \"Not?A_Brand\";v=\"99\"",
-                "sec-ch-ua-mobile": "?0",
-                "sec-ch-ua-platform": "\"macOS\"",
+                // "sec-ch-ua": "\"Chromium\";v=\"130\", \"Google Chrome\";v=\"130\", \"Not?A_Brand\";v=\"99\"",
+                // "sec-ch-ua-mobile": "?0",
+                // "sec-ch-ua-platform": "\"macOS\"",
                 "sec-fetch-dest": "empty",
                 "sec-fetch-mode": "cors",
                 "sec-fetch-site": "same-origin",
@@ -154,11 +152,9 @@ async function getInmateData(start, skip, includeCount) {
             }
         
         const json = await response.json();
-        //console.log(json.Inmates.length);
         if(includeCount) {
             totalInmates = json.Total;
         }
-        // console.log('total: ' + json.Total);
         return json.Inmates;
     } catch (error) {
         console.error(error.message);
