@@ -9,5 +9,9 @@
   },
   "author": "Sam",
   "license": "ISC",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "export-to-csv": "^1.4.0",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+  }
 }
