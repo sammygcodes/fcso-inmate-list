@@ -46,7 +46,7 @@ async function getInmates() {
         let partialInmateList = await getInmateData(TAKE_VALUE, skipValue, !skipValue);
         addInmates(partialInmateList);
         skipValue += TAKE_VALUE;
-    } while (skipValue < 30);
+    } while (skipValue < totalInmates);
 
     processList(maxBond);
 }
@@ -75,14 +75,17 @@ function exportList() {
         csvList.push({
             firstName: inmate.FirstName,
             lastName: inmate.LastName,
-            totalBondAmount: inmate.TotalBondAmount
+            totalBondAmount: inmate.TotalBondAmount,
+            arrestDate: inmate.ArrestDate,
+            releaseDate: inmate.ReleaseDate,
+            courtDate: inmate.CourtDate
         });
     });
 
     const sheet = XLSX.utils.json_to_sheet(csvList);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, sheet, "Inmates");
-    XLSX.writeFile(workbook, 'test.xlsx');
+    XLSX.writeFile(workbook, 'inmates.xlsx');
 }
 
 async function getAdsData() {
