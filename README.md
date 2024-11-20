@@ -5,7 +5,6 @@
 - Verify that it was successfully installted by running `node -v` on Command Prompt/Powershell (Windows) or Terminal (MacOS)
 
 ## Installation
-- Click green code button and copy HTTPS link
 - In Command Prompt or Terminal run `git clone https://github.com/sammygcodes/fcso-inmate-list.git`
   - Tip: if you want the program folder to be on your desktop, run `cd desktop` before running git clone.
 - After git clone is complete, `cd fcso-inmate-list`
