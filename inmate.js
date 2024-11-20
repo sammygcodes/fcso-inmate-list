@@ -98,8 +98,6 @@ async function getCookieValue() {
     const pageCookies = await page.cookies();
 
     const antiforgeryCookie = pageCookies.find((cookie) => cookie.name === COOKIE_VALUE);
-
-    console.log(antiforgeryCookie);
     cookieValue = COOKIE_VALUE + '=' + antiforgeryCookie.value;
 
     await browser.close();
