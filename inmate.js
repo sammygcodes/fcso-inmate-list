@@ -1,6 +1,7 @@
 import * as readline from 'node:readline';
 import { stdin as input, stdout as output } from 'node:process';
 import { COOKIE_VALUE, TAKE_VALUE, XSFR_REGEX } from './constants.js'
+import puppeteer from 'puppeteer';
 
 import * as XLSX from 'xlsx/xlsx.mjs';
 import * as fs from 'fs';
@@ -10,6 +11,7 @@ const rl = readline.createInterface({ input, output });
 
 // value needed for API call to work
 let XSFR;
+let cookieValue;
 
 let totalInmates = -1;
 let maxBond = 0;
@@ -25,6 +27,8 @@ rl.prompt();
 rl.on('line', async function(amount) {
     if(amount > 0) {
         maxBond = amount;
+        console.log('Getting cookie...');
+        await getCookieValue();
         console.log('Getting list...');
         await getInmates();
         exportList();
@@ -87,6 +91,20 @@ function exportList() {
     XLSX.writeFile(workbook, 'inmates.xlsx');
 }
 
+async function getCookieValue() {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.goto('https://forsythsheriffnc.policetocitizen.com/Inmates/Catalog');
+    const pageCookies = await page.cookies();
+
+    const antiforgeryCookie = pageCookies.find((cookie) => cookie.name === COOKIE_VALUE);
+
+    console.log(antiforgeryCookie);
+    cookieValue = COOKIE_VALUE + '=' + antiforgeryCookie.value;
+
+    await browser.close();
+}
+
 async function getAdsData() {
     try {
         const response = await fetch("https://forsythsheriffnc.policetocitizen.com/api/AdsSettings/Version/359", {
@@ -102,7 +120,7 @@ async function getAdsData() {
             "sec-fetch-mode": "cors",
             "sec-fetch-site": "same-origin",
             //"traceparent": "00-63055eccc64c47ff8a5f706b9ed60145-d26f7bfa3c3e4ebf-01",
-            "cookie": COOKIE_VALUE,
+            "cookie": cookieValue,
             "Referer": "https://forsythsheriffnc.policetocitizen.com/Inmates/Catalog",
             "Referrer-Policy": "strict-origin-when-cross-origin"
             },
@@ -139,7 +157,7 @@ async function getInmateData(start, skip, includeCount) {
                 "sec-fetch-site": "same-origin",
                 //"traceparent": "00-63055eccc64c47ff8a5f706b9ed60145-a487134d0c8b4bde-01",
                 "x-xsrf-token": XSFR,
-                "cookie": COOKIE_VALUE,
+                "cookie": cookieValue,
                 "Referer": "https://forsythsheriffnc.policetocitizen.com/Inmates/Catalog",
                 "Referrer-Policy": "strict-origin-when-cross-origin"
             },

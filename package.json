@@ -11,6 +11,12 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "puppeteer": "^23.8.0",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.15.0",
+    "eslint": "^9.15.0",
+    "globals": "^15.12.0"
   }
 }
