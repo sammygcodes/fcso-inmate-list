@@ -9,7 +9,7 @@ XLSX.set_fs(fs);
 
 const rl = readline.createInterface({ input, output });
 
-// value needed for API call to work
+// values needed for API call to work
 let XSFR;
 let cookieValue;
 
